@@ -4,13 +4,14 @@ const express = require('express');
 const app = express();
 
 //Route imports
+const users = require("./routes/users")
 
 //Connect to database
 connectDB();
 
 //Run App initialization middleware
 app.use(express.json());
-
+app.use("/api/users", users);
 //Back-end listener 
 const port = process.env.PORT || 5003
 app.listen(port, () => {
