@@ -10,7 +10,7 @@ const router = express.Router();
 ////GET All Posts
 router.get('/', async (req, res) => {
     try {
-        const posts = await Post.find();
+        const posts = await Post.find().sort( {postedOn: -1} );
         return res.send(posts);
     }
     catch(err) {
