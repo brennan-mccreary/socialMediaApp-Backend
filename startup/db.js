@@ -1,6 +1,6 @@
 //Imports
 const mongoose = require('mongoose');
-const config = require('config');
+const config = require('config'); 
 
 //Connection function declaration
 function connectDB() {
