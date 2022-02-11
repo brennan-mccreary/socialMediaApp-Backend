@@ -9,6 +9,7 @@ const { userInfo } = require('os');
 const router = express.Router();
 
 //Endpoints and handlers
+//GET All Users
 router.get('/', async (req, res) => {
     try {
         const users = await User.find();
@@ -17,24 +18,23 @@ router.get('/', async (req, res) => {
     } catch (err) {
         return res.status(500).send(`Internal Server Error: ${err}`);
     }
-<<<<<<< HEAD
-})
+});
 
+//POST Register New User
 router.post('/register', async (req, res) => {
     try {
         const { error } = validateUser(req.body);
-
-        if (error) return res.status(400).send(error.details[0].messsage);
+        if (error) return res.status(400).send(error.details[0].message);
 
         let user = await User.findOne({ email: req.body.email });
         if (user) return res.status(400).send(`User already Registered.`);
 
         const salt = await bcrypt.genSalt(10);
         user = new User({
-            name: req.body.name,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
             email: req.body.email,
-            passsword: await bcrypt.hash(req.body.password, salt),
-
+            password: await bcrypt.hash(req.body.password, salt)
         });
 
         await user.save();
@@ -44,15 +44,12 @@ router.post('/register', async (req, res) => {
         return res
         .header('x-auth-token', token)
         .header('access-control-expose-headers', 'x-auth-token')
-        .send({_id: user._id, name: user.name, email: user.email });
+        .send({_id: user._id, firstName: user.firstName, email: user.email });
 
     }catch (ex) {
         return res.status(500).send(`Internal Server Error: ${ex}`);
     }
 });
-=======
-});
 
->>>>>>> 2ff32839cf915ddee4f419f741f03c805e196cb3
 //Exports
 module.exports = router;
