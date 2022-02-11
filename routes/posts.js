@@ -18,11 +18,35 @@ router.get('/', async (req, res) => {
     };
 });
 
-////PUT Like - post _id
+////PUT Like - post _id, user _id
+router.put('/like/:id', async (req, res) => {
+    try {
+
+    }
+    catch(err) {
+        return res.status(500).send(`Internal Server Error: ${err}`);
+    };
+});
 
 ////POST New Post - user _id, text field
+router.post('/post', async (req, res) => {
+    try {
+
+    }
+    catch(err) {
+        return res.status(500).send(`Internal Server Error: ${err}`);
+    };
+});
 
 ////DELETE Single post - user _id, post _id
+router.delete('/delete', async (req, res) => {
+    try {
+
+    }
+    catch(err) {
+        return res.status(500).send(`Internal Server Error: ${err}`);
+    };
+});
 
 //Exports
 module.exports = router;

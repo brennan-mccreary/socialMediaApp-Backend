@@ -17,6 +17,7 @@ router.get('/', async (req, res) => {
     } catch (err) {
         return res.status(500).send(`Internal Server Error: ${err}`);
     }
+<<<<<<< HEAD
 })
 
 router.post('/register', async (req, res) => {
@@ -49,5 +50,9 @@ router.post('/register', async (req, res) => {
         return res.status(500).send(`Internal Server Error: ${ex}`);
     }
 });
+=======
+});
+
+>>>>>>> 2ff32839cf915ddee4f419f741f03c805e196cb3
 //Exports
 module.exports = router;
