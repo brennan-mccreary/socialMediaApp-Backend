@@ -2,6 +2,7 @@
 const express = require('express'); //Request routing
 const { Post, validatePost } = require('../models/post');
 const auth = require('../middleware/auth'); //JWT presence confirmation middleware
+const { text } = require('express');
 
 //Define router
 const router = express.Router();
@@ -31,21 +32,37 @@ router.put('/like/:id', async (req, res) => {
 ////POST New Post - user _id, text field
 router.post('/post', async (req, res) => {
     try {
+    //      const { error } = validate(req.body);
+    // if ( error )
+    // return res.status(400).send(error);
 
+    const post = new Post({
+        text: req.body.text,
+        ownedBy: req.body.ownedBy
+
+    })
+    await post.save();
+    return res.send(post);
     }
     catch(err) {
         return res.status(500).send(`Internal Server Error: ${err}`);
     };
 });
 
-////DELETE Single post - user _id, post _id
-router.delete('/delete', async (req, res) => {
+////DELETE Single post - post _id
+router.delete('/delete/:id', async (req, res) => {
     try {
+        
+            const deleted = await Post.findByIdAndDelete(req.params.id);
+            const posts = await Post.find()
+
+        return res.send(posts);
 
     }
     catch(err) {
         return res.status(500).send(`Internal Server Error: ${err}`);
     };
+
 });
 
 //Exports
