@@ -20,7 +20,34 @@ router.get('/', async (req, res) => {
     }
 });
 
-//POST Register New User
+//PUT About Me to User - user _id, text
+router.put('/about/:id', async (req, res) => {
+    try{
+        //about me validation function here
+        //error existence function
+
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            {
+                biography: req.body.biography
+            },
+            { new: true }
+        );
+
+        if(!user) return res.send(400).send(`User with id ${req.params.id} does not exist.`);
+
+        await user.save();
+
+        return res.send(user);
+    }
+    catch(err) {
+        return res.status(500).send(`Interal Server Error: ${ex}`);
+    }
+});
+
+//PUT Profile picture to User - user _id, image
+
+//POST Register New User - user first and last name, email, password
 router.post('/register', async (req, res) => {
     try {
         const { error } = validateUser(req.body);
