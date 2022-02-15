@@ -54,7 +54,8 @@ router.put('/:idOne/add-friend/:idTwo', async (req, res) => {
     try{
         const userOne = await User.findById(req.params.idOne);
         const userTwo = await User.findById(req.params.idTwo);
-        if(!userOne || !userTwo) return res.send(400).send(`User does not exist.`);
+        if(!userOne || !userTwo) return res.status(400).send(`User does not exist.`);
+        if(userOne.friends.includes(req.params.idTwo) === true) return res.status(400).send('Users are already friends.');
 
         userOne.friends.push(req.params.idTwo);
         userTwo.friends.push(req.params.idOne);
