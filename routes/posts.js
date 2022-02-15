@@ -49,14 +49,20 @@ router.post('/post', async (req, res) => {
     };
 });
 
-////DELETE Single post - user _id, post _id
-router.delete('/delete', async (req, res) => {
+////DELETE Single post - post _id
+router.delete('/delete/:id', async (req, res) => {
     try {
+        
+            const deleted = await Post.findByIdAndDelete(req.params.id);
+            const posts = await Post.find()
+
+        return res.send(posts);
 
     }
     catch(err) {
         return res.status(500).send(`Internal Server Error: ${err}`);
     };
+
 });
 
 //Exports
