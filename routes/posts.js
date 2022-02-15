@@ -32,9 +32,8 @@ router.put('/like/:id', async (req, res) => {
 ////POST New Post - user _id, text field
 router.post('/post', async (req, res) => {
     try {
-    //      const { error } = validate(req.body);
-    // if ( error )
-    // return res.status(400).send(error);
+    //new post validation
+    //validation error handling here
 
     const post = new Post({
         text: req.body.text,

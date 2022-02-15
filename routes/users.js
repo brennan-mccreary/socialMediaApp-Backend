@@ -41,11 +41,34 @@ router.put('/about/:id', async (req, res) => {
         return res.send(user);
     }
     catch(err) {
-        return res.status(500).send(`Interal Server Error: ${ex}`);
+        return res.status(500).send(`Interal Server Error: ${err}`);
     }
 });
 
 //PUT Profile picture to User - user _id, image
+//
+//
+
+//PUT Add friend to User - user _id, friend _id
+router.put('/:idOne/add-friend/:idTwo', async (req, res) => {
+    try{
+        const userOne = await User.findById(req.params.idOne);
+        const userTwo = await User.findById(req.params.idTwo);
+        if(!userOne || !userTwo) return res.send(400).send(`User does not exist.`);
+
+        userOne.friends.push(req.params.idTwo);
+        userTwo.friends.push(req.params.idOne);
+
+        await userOne.save();
+        await userTwo.save();
+
+        const users = {userOne, userTwo}
+        return res.send(users);
+    }
+    catch(err) {
+        return res.status(500).send(`Interal Server Error: ${err}`);
+    }
+});
 
 //POST Register New User - user first and last name, email, password
 router.post('/register', async (req, res) => {

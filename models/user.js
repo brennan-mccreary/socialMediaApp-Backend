@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
 
     biography: {type: String, maxlength: 500, default:''},
 
-    friends: {type: [], default: []},
+    friends: {type: [String], default: []},
 
     isAdmin: {type: Boolean, default: false},
 });
