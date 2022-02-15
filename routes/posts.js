@@ -22,7 +22,15 @@ router.get('/', async (req, res) => {
 ////PUT Like - post _id, user _id
 router.put('/like/:id', async (req, res) => {
     try {
+       
+        const post = await Post.findByIdAndUpdate(
+            req.params.id, { $inc: { likeCount: 1}}, { new: true }
+            
+        );
+       
+        await post.save();
 
+        return res.send(post);
     }
     catch(err) {
         return res.status(500).send(`Internal Server Error: ${err}`);
