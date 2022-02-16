@@ -17,11 +17,19 @@ const userSchema = new mongoose.Schema({
     friends: {type: [String], default: []},
 
     isAdmin: {type: Boolean, default: false},
+
+    image: {type: String, default: ''},
 });
 
 //JWT assignment method
 userSchema.methods.generateAuthToken = function () {
-    return jwt.sign({ _id: this._id, firstName: this.firstName, lastName: this.lastName, isAdmin: this.isAdmin},
+    return jwt.sign({ 
+        _id: this._id, 
+        firstName: this.firstName, 
+        lastName: this.lastName, 
+        isAdmin: this.isAdmin,
+        image: this.image,
+    },
     config.get('jwtSecret'));
 };
 
@@ -34,7 +42,8 @@ function validateUser(user) {
         firstName: Joi.string().min(1).max(20).required(),
         lastName: Joi.string().min(1).max(20).required(),
         email: Joi.string().email().min(5).max(255).required(),
-        password: Joi.string().min(6).max(1024).required()
+        password: Joi.string().min(6).max(1024).required(),
+        image: Joi.string(),
     });
     return schema.validate(user);
 };

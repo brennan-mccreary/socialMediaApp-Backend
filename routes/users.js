@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt'); //Password hashing
 const { User, validateUser } = require('../models/user'); //User model and validation
 const auth = require('../middleware/auth'); //JWT presence confirmation middleware
 const { userInfo } = require('os');
+const fileUpload = require('../middleware/file-upload');
 
 //Define router
 const router = express.Router();
@@ -46,8 +47,26 @@ router.put('/about/:id', async (req, res) => {
 });
 
 //PUT Profile picture to User - user _id, image
-//
-//
+router.put('/image/:id', fileUpload.single('image') ,async (req, res) => {
+    try{
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            {
+                image: req.file.path
+            },
+            { new: true }
+        );
+
+        if(!user) return res.send(400).send(`User with id ${req.params.id} does not exist.`);
+
+        await user.save();
+
+        return res.send(user);
+    }
+    catch(err) {
+        return res.status(500).send(`Interal Server Error: ${err}`);
+    }
+});
 
 //PUT Add friend to User - user _id, friend _id
 router.put('/:idOne/add-friend/:idTwo', async (req, res) => {
