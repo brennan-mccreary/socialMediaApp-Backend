@@ -6,7 +6,9 @@ const Joi = require('joi'); //validation
 const postSchema = new mongoose.Schema({
     text: {type: String, required: true, minlength: 1, maxlength: 500},
     ownedBy: {type: String, required: true},
-    postedOn: {type: Date, default: Date.now}
+    postedOn: {type: Date, default: Date.now}, 
+    likeCount: {type: Number, required : true, default: 0 }
+    
 });
 
 //Create model with previously defined schema
