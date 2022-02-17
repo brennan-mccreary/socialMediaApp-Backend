@@ -46,8 +46,20 @@ router.put('/about/:id', async (req, res) => {
     }
 });
 
+//GET User's friends
+router.get('/:id/friends', async (req, res) => {
+    try {
+        let user = await User.findOne({_id: req.params.id}).populate('friends');
+        let friends = user.friends  
+       
+        return res.send(friends);
+    } catch (err) {
+        return res.status(500).send(`Internal Server Error: ${err}`);
+    }
+});
+
 //PUT Profile picture to User - user _id, image
-router.put('/image/:id', fileUpload.single('image') ,async (req, res) => {
+router.put('/image/:id', fileUpload.single('image'), async (req, res) => {
     try{
         const user = await User.findByIdAndUpdate(
             req.params.id,

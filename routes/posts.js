@@ -1,18 +1,47 @@
 //Import dependencies
 const express = require('express'); //Request routing
 const { Post, validatePost } = require('../models/post');
+const { User } = require('../models/user')
 const auth = require('../middleware/auth'); //JWT presence confirmation middleware
 const { text } = require('express');
 
 //Define router
 const router = express.Router();
 
+
+//Functions
+populateById = async (id) => {
+    let posts = await Post.find({ ownedBy: id })
+    //console.log(posts);
+    //console.log(posts);
+    return posts;
+}
 //Endpoints and handlers
 ////GET All Posts
 router.get('/', async (req, res) => {
     try {
         const posts = await Post.find().sort( {postedOn: -1} );
         return res.send(posts);
+    }
+    catch(err) {
+        return res.status(500).send(`Internal Server Error: ${err}`);
+    };
+});
+
+////GET All Friends Posts
+router.get('/friends/:id', async (req, res) => {
+    try {
+        let user = await User.findById(req.params.id)
+        let friends = user.friends;
+        let posts = await Post.find().sort( {postedOn: -1} );
+
+        let returnedPosts = posts.filter((el) => {
+            for(let i = 0; i < friends.length; i ++) {
+                if(el.ownedBy == friends[i]) return true
+            }
+        });
+
+        return res.send(returnedPosts);
     }
     catch(err) {
         return res.status(500).send(`Internal Server Error: ${err}`);

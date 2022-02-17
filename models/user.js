@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
 
     biography: {type: String, maxlength: 500, default:''},
 
-    friends: {type: [String], default: []},
+    friends: [{type: mongoose.Types.ObjectId, ref: 'User'}],
 
     isAdmin: {type: Boolean, default: false},
 
