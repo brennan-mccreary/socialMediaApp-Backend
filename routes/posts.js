@@ -16,6 +16,22 @@ populateById = async (id) => {
 }
 
 //Endpoints and handlers
+
+////PUT Like on post by id
+router.put('/like/:id', async (req, res) => {
+    try{
+        const post = await Post.findByIdAndUpdate(
+        req.params.id, { $inc: { likeCount: 1}}, {new: true});
+
+        await post.save();
+
+        return res.send(post);
+    }
+    catch(err) {
+        return res.status(500).send(`Internal Server Error: ${err}`);
+    }
+});
+
 ////GET All Posts
 router.get('/', async (req, res) => {
     try {
@@ -88,11 +104,10 @@ router.post('/post', async (req, res) => {
 router.delete('/delete/:id', async (req, res) => {
     try {
         
-            const deleted = await Post.findByIdAndDelete(req.params.id);
-            const posts = await Post.find()
+        const deleted = await Post.findByIdAndDelete(req.params.id);
+        const posts = await Post.find()
 
         return res.send(posts);
-
     }
     catch(err) {
         return res.status(500).send(`Internal Server Error: ${err}`);
