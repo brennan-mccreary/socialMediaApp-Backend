@@ -80,6 +80,35 @@ router.put('/image/:id', fileUpload.single('image'), async (req, res) => {
     }
 });
 
+//PUT Outgoing friend request - sender _id, receiver _id
+router.put('/add-friend/:from/:to', async (req, res) => {
+    try{
+        let user = await User.findById(req.params.to)
+
+        user.friendRequests.push(req.params.from)
+
+        await user.save(); 
+
+        return res.send(user.friendRequests)
+    }
+    catch(err) {
+        return res.status(500).send(`Interal Server Error: ${err}`);
+    }
+});
+
+//GET Incoming friend requests - user _id
+router.get('/friend-requests/:id', async (req, res) => {
+    try{
+        let user = await User.findOne({_id: req.params.id}).populate('friendRequests');
+        let friendRequests = user.friendRequests 
+       
+        return res.send(friendRequests);
+    }
+    catch(err) {
+        return res.status(500).send(`Interal Server Error: ${err}`);
+    }
+});
+
 //PUT Add friend to User - user _id, friend _id
 router.put('/:idOne/add-friend/:idTwo', async (req, res) => {
     try{

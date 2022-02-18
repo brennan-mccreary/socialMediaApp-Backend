@@ -12,10 +12,9 @@ const router = express.Router();
 //Functions
 populateById = async (id) => {
     let posts = await Post.find({ ownedBy: id })
-    //console.log(posts);
-    //console.log(posts);
     return posts;
 }
+
 //Endpoints and handlers
 ////GET All Posts
 router.get('/', async (req, res) => {
