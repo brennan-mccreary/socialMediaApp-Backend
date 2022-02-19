@@ -16,6 +16,17 @@ populateById = async (id) => {
 }
 
 //Endpoints and handlers
+////GET User's personal posts
+router.get('/:id', async (req, res) => {
+    try{
+        const posts = await Post.find({ ownedBy: req.params.id})
+
+        return res.send(posts);
+    }
+    catch(err) {
+        return res.status(500).send(`Internal Server Error: ${err}`);
+    }
+});
 
 ////PUT Like on post by id
 router.put('/like/:id', async (req, res) => {
