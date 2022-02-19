@@ -30,6 +30,7 @@ userSchema.methods.generateAuthToken = function () {
         lastName: this.lastName, 
         isAdmin: this.isAdmin,
         image: this.image,
+        biography: this.biography,
     },
     config.get('jwtSecret'));
 };
