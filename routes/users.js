@@ -24,9 +24,6 @@ router.get('/', async (req, res) => {
 //PUT About Me to User - user _id, text
 router.put('/about/:id', async (req, res) => {
     try{
-        //about me validation function here
-        //error existence function
-
         const user = await User.findByIdAndUpdate(
             req.params.id,
             {
@@ -89,7 +86,7 @@ router.put('/add-friend/:from/:to', async (req, res) => {
 
         await user.save(); 
 
-        return res.send(user.friendRequests)
+        return res.send(user)
     }
     catch(err) {
         return res.status(500).send(`Interal Server Error: ${err}`);
@@ -109,8 +106,18 @@ router.get('/friend-requests/:id', async (req, res) => {
     }
 });
 
+//PUT Decline friend request
+router.put('/:idOne/decline-friend/:idTwo', async (req, res) => {
+    const user = await User.findById(req.params.idOne);
+
+    user.friendRequests.pull(req.params.idTwo);
+    await user.save();
+
+    return res.send(user);
+});
+
 //PUT Add friend to User - user _id, friend _id
-router.put('/:idOne/add-friend/:idTwo', async (req, res) => {
+router.put('/:idOne/accept-friend/:idTwo', async (req, res) => {
     try{
         const userOne = await User.findById(req.params.idOne);
         const userTwo = await User.findById(req.params.idTwo);
@@ -120,11 +127,13 @@ router.put('/:idOne/add-friend/:idTwo', async (req, res) => {
         userOne.friends.push(req.params.idTwo);
         userTwo.friends.push(req.params.idOne);
 
+        userOne.friendRequests.pull(req.params.idTwo);
+
+
         await userOne.save();
         await userTwo.save();
 
-        const users = {userOne, userTwo}
-        return res.send(users);
+        return res.send(userOne);
     }
     catch(err) {
         return res.status(500).send(`Interal Server Error: ${err}`);

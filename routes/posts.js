@@ -32,7 +32,7 @@ router.get('/:id', async (req, res) => {
 router.put('/like/:id', async (req, res) => {
     try{
         const post = await Post.findByIdAndUpdate(
-        req.params.id, { $inc: { likeCount: 1}}, {new: true});
+        req.params.id, { $inc: { likeCount: 1}}, {new: true}).populate('ownedBy');
 
         await post.save();
 
@@ -46,7 +46,7 @@ router.put('/like/:id', async (req, res) => {
 ////GET All Posts
 router.get('/', async (req, res) => {
     try {
-        const posts = await Post.find().sort( {postedOn: -1} );
+        const posts = await Post.find().populate('ownedBy').sort( {postedOn: -1} );
         return res.send(posts);
     }
     catch(err) {
@@ -59,11 +59,12 @@ router.get('/friends/:id', async (req, res) => {
     try {
         let user = await User.findById(req.params.id)
         let friends = user.friends;
-        let posts = await Post.find().sort( {postedOn: -1} );
+        let posts = await Post.find().populate('ownedBy').sort( {postedOn: -1} );
 
         let returnedPosts = posts.filter((el) => {
             for(let i = 0; i < friends.length; i ++) {
-                if(el.ownedBy == friends[i]) return true
+                let owner = el.ownedBy._id.toString();
+                if(owner == friends[i]) return true
             }
         });
 
@@ -74,23 +75,6 @@ router.get('/friends/:id', async (req, res) => {
     };
 });
 
-////PUT Like - post _id, user _id
-router.put('/like/:id', async (req, res) => {
-    try {
-       
-        const post = await Post.findByIdAndUpdate(
-            req.params.id, { $inc: { likeCount: 1}}, { new: true }
-            
-        );
-       
-        await post.save();
-
-        return res.send(post);
-    }
-    catch(err) {
-        return res.status(500).send(`Internal Server Error: ${err}`);
-    };
-});
 
 ////POST New Post - user _id, text field
 router.post('/post', async (req, res) => {
